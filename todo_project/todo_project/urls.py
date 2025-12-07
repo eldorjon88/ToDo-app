@@ -34,3 +34,28 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
 ]
+
+
+
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from todo.views import TaskViewSet, AdminStatsAPIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+router = DefaultRouter()
+router.register("tasks", TaskViewSet, basename="tasks")
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+
+    # JWT
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
+    # Tasks API
+    path("api/", include(router.urls)),
+
+    # Admin stats
+    path("api/admin/stats/", AdminStatsAPIView.as_view()),
+]
