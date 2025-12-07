@@ -1,9 +1,8 @@
-# todo/views.py
-from django.contrib.auth.models import User
-from django.db.models import Count
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db.models import Count
+from django.contrib.auth.models import User
 
 from .models import Task
 from .serializers import TaskSerializer
@@ -12,11 +11,7 @@ from .filters import TaskFilter
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-    """
-    Task CRUD API.
-    Staff foydalanuvchilar barcha tasklarni ko‘ra oladi,
-    odatiy foydalanuvchi faqat o‘z tasklarini ko‘radi.
-    """
+    queryset = Task.objects.all()  # MUHIM
     serializer_class = TaskSerializer
     permission_classes = [IsOwnerOrAdmin]
     filterset_class = TaskFilter
@@ -34,9 +29,6 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 class AdminStatsAPIView(APIView):
-    """
-    Admin uchun statistik ma'lumotlar API.
-    """
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request):
